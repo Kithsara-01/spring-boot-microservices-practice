@@ -44,8 +44,9 @@ public class CustomerService {
         return customerRepository.save(existingCustomer);
     }
 
-    public void deleteCustomer(Long id) {
+    public String deleteCustomer(Long id) {
         customerRepository.deleteById(id);
+        return "Customer deleted successfully";
     }
 
 }

@@ -47,7 +47,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
-        customerService.deleteCustomer(id);
+    public String deleteCustomer(@PathVariable Long id) {
+        return customerService.deleteCustomer(id);
     }
 }
