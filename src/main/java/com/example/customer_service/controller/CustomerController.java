@@ -14,6 +14,9 @@ import com.example.customer_service.model.Customer;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = "*")
 @RestController
 public class CustomerController {
 
