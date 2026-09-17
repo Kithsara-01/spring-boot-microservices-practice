@@ -49,4 +49,10 @@ public class OrderController {
     public String deleteOrder(@PathVariable Long id) {
         return orderService.deleteOrder(id);
     }
+
+    @GetMapping("/orders/customer/{customerId}")
+    public String getCustomerDetails(@PathVariable Long customerId) {
+        return orderService.getCustomerDetails(customerId);
+    }
+
 }
