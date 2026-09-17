@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Customer Management</title>
+    <title>Food Ordering System</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,10 +14,15 @@
 
     <div class="container">
 
-        <h1>Customer Management</h1>
+        <h1>Food Ordering System</h1>
+
+        <!-- Customer Management -->
 
         <div class="form-section">
-            <h2>Add Customer</h2>
+
+            <h2>Customer Management</h2>
+
+            <h3>Add Customer</h3>
 
             <form id="customerForm">
 
@@ -41,10 +47,14 @@
                     required
                 >
 
-                <button type="submit">Add Customer</button>
+                <button type="submit">
+                    Add Customer
+                </button>
 
             </form>
+
         </div>
+
 
         <div class="customers-section">
 
@@ -57,6 +67,7 @@
             <table>
 
                 <thead>
+
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
@@ -64,6 +75,7 @@
                         <th>Phone</th>
                         <th>Actions</th>
                     </tr>
+
                 </thead>
 
                 <tbody id="customerTableBody">
@@ -73,9 +85,82 @@
 
         </div>
 
+
+        <!-- Order Management -->
+
+        <div class="form-section">
+
+            <h2>Order Management</h2>
+
+            <h3>Add Order</h3>
+
+            <form id="orderForm">
+
+                <input
+                    type="number"
+                    id="customerId"
+                    placeholder="Customer ID"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="product"
+                    placeholder="Product"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="quantity"
+                    placeholder="Quantity"
+                    min="1"
+                    required
+                >
+
+                <button type="submit">
+                    Add Order
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="orders-section">
+
+            <h2>Orders</h2>
+
+            <button id="loadOrdersBtn">
+                Load Orders
+            </button>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer ID</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="orderTableBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
+
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
