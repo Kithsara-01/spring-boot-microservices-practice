@@ -1,13 +1,76 @@
-// ================================
-// Customer Service
-// ================================
+// =================================
+// API URLs
+// =================================
 
 const CUSTOMER_API_URL = "http://localhost:8080/customers";
 
+const ORDER_API_URL = "http://localhost:8081/orders";
 
-// Customer elements
 
-const customerForm = document.getElementById("customerForm");
+// =================================
+// NAVIGATION
+// =================================
+
+function showSection(sectionId) {
+
+    const sections =
+        document.querySelectorAll(".service-section");
+
+    sections.forEach(function (section) {
+
+        section.classList.remove(
+            "active-section"
+        );
+
+    });
+
+
+    const selectedSection =
+        document.getElementById(sectionId);
+
+    selectedSection.classList.add(
+        "active-section"
+    );
+
+
+    const customerNavBtn =
+        document.getElementById(
+            "customerNavBtn"
+        );
+
+    const orderNavBtn =
+        document.getElementById(
+            "orderNavBtn"
+        );
+
+
+    customerNavBtn.classList.remove("active");
+
+    orderNavBtn.classList.remove("active");
+
+
+    if (sectionId === "customerSection") {
+
+        customerNavBtn.classList.add("active");
+
+    }
+
+
+    if (sectionId === "orderSection") {
+
+        orderNavBtn.classList.add("active");
+
+    }
+
+}
+
+
+// =================================
+// CUSTOMER ELEMENTS
+// =================================
+
+const customerForm =
+    document.getElementById("customerForm");
 
 const loadCustomersBtn =
     document.getElementById("loadCustomersBtn");
@@ -15,17 +78,19 @@ const loadCustomersBtn =
 const customerTableBody =
     document.getElementById("customerTableBody");
 
+const customerSubmitBtn =
+    document.getElementById("customerSubmitBtn");
 
-// ================================
-// Order Service
-// ================================
-
-const ORDER_API_URL = "http://localhost:8081/orders";
+const cancelCustomerBtn =
+    document.getElementById("cancelCustomerBtn");
 
 
-// Order elements
+// =================================
+// ORDER ELEMENTS
+// =================================
 
-const orderForm = document.getElementById("orderForm");
+const orderForm =
+    document.getElementById("orderForm");
 
 const loadOrdersBtn =
     document.getElementById("loadOrdersBtn");
@@ -33,69 +98,184 @@ const loadOrdersBtn =
 const orderTableBody =
     document.getElementById("orderTableBody");
 
+const orderSubmitBtn =
+    document.getElementById("orderSubmitBtn");
 
-// ================================
-// Add Customer
-// ================================
-
-customerForm.addEventListener("submit", async function (event) {
-
-    event.preventDefault();
-
-    const customer = {
-
-        name: document.getElementById("name").value,
-
-        email: document.getElementById("email").value,
-
-        phone: document.getElementById("phone").value
-
-    };
+const cancelOrderBtn =
+    document.getElementById("cancelOrderBtn");
 
 
-    try {
+// =================================
+// EDIT IDs
+// =================================
 
-        const response = await fetch(CUSTOMER_API_URL, {
+let editingCustomerId = null;
 
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(customer)
-
-        });
+let editingOrderId = null;
 
 
-        if (!response.ok) {
+// =================================
+// SWEETALERT
+// =================================
 
-            throw new Error("Failed to create customer");
+function showSuccess(message) {
+
+    Swal.fire({
+
+        icon: "success",
+
+        title: "Success",
+
+        text: message,
+
+        timer: 1800,
+
+        showConfirmButton: false
+
+    });
+
+}
+
+
+function showError(message) {
+
+    Swal.fire({
+
+        icon: "error",
+
+        title: "Error",
+
+        text: message
+
+    });
+
+}
+
+
+// =================================
+// CUSTOMER - ADD / UPDATE
+// =================================
+
+customerForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        const customer = {
+
+            name:
+                document.getElementById("name")
+                    .value
+                    .trim(),
+
+            email:
+                document.getElementById("email")
+                    .value
+                    .trim(),
+
+            phone:
+                document.getElementById("phone")
+                    .value
+                    .trim()
+
+        };
+
+
+        try {
+
+            let response;
+
+
+            if (editingCustomerId !== null) {
+
+                response =
+                    await fetch(
+                        `${CUSTOMER_API_URL}/${editingCustomerId}`,
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(customer)
+
+                        }
+                    );
+
+            } else {
+
+                response =
+                    await fetch(
+                        CUSTOMER_API_URL,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(customer)
+
+                        }
+                    );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to save customer"
+                );
+
+            }
+
+
+            if (editingCustomerId !== null) {
+
+                showSuccess(
+                    "Customer updated successfully!"
+                );
+
+            } else {
+
+                showSuccess(
+                    "Customer added successfully!"
+                );
+
+            }
+
+
+            resetCustomerForm();
+
+            loadCustomers();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                "Unable to save customer. Please try again."
+            );
 
         }
 
-
-        alert("Customer added successfully!");
-
-        customerForm.reset();
-
-        loadCustomers();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Error adding customer");
-
     }
+);
 
-});
 
-
-// ================================
-// Load Customers
-// ================================
+// =================================
+// CUSTOMER - LOAD
+// =================================
 
 loadCustomersBtn.addEventListener(
     "click",
@@ -113,7 +293,9 @@ async function loadCustomers() {
 
         if (!response.ok) {
 
-            throw new Error("Failed to load customers");
+            throw new Error(
+                "Failed to load customers"
+            );
 
         }
 
@@ -151,7 +333,6 @@ async function loadCustomers() {
 
                     </button>
 
-
                     <button
                         class="delete-btn"
                         onclick="deleteCustomer(${customer.id})">
@@ -174,26 +355,138 @@ async function loadCustomers() {
 
         console.error(error);
 
-        alert("Error loading customers");
+        showError(
+            "Unable to load customers."
+        );
 
     }
 
 }
 
 
-// ================================
-// Delete Customer
-// ================================
+// =================================
+// CUSTOMER - EDIT
+// =================================
+
+async function editCustomer(id) {
+
+    try {
+
+        const response =
+            await fetch(
+                `${CUSTOMER_API_URL}/${id}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load customer"
+            );
+
+        }
+
+
+        const customer =
+            await response.json();
+
+
+        document.getElementById("name").value =
+            customer.name;
+
+        document.getElementById("email").value =
+            customer.email;
+
+        document.getElementById("phone").value =
+            customer.phone;
+
+
+        editingCustomerId = id;
+
+
+        customerSubmitBtn.textContent =
+            "Update Customer";
+
+
+        cancelCustomerBtn.style.display =
+            "inline-block";
+
+
+        customerForm.scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Unable to load customer details."
+        );
+
+    }
+
+}
+
+
+// =================================
+// CUSTOMER - CANCEL
+// =================================
+
+cancelCustomerBtn.addEventListener(
+    "click",
+    function () {
+
+        resetCustomerForm();
+
+    }
+);
+
+
+function resetCustomerForm() {
+
+    editingCustomerId = null;
+
+    customerForm.reset();
+
+    customerSubmitBtn.textContent =
+        "Add Customer";
+
+    cancelCustomerBtn.style.display =
+        "none";
+
+}
+
+
+// =================================
+// CUSTOMER - DELETE
+// =================================
 
 async function deleteCustomer(id) {
 
-    const confirmDelete =
-        confirm(
-            "Are you sure you want to delete this customer?"
-        );
+    const result =
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "Delete Customer?",
+
+            text:
+                "Are you sure you want to delete this customer?",
+
+            showCancelButton: true,
+
+            confirmButtonText:
+                "Yes, Delete",
+
+            cancelButtonText:
+                "Cancel"
+
+        });
 
 
-    if (!confirmDelete) {
+    if (!result.isConfirmed) {
 
         return;
 
@@ -203,16 +496,19 @@ async function deleteCustomer(id) {
     try {
 
         const response =
-            await fetch(`${CUSTOMER_API_URL}/${id}`, {
-
-                method: "DELETE"
-
-            });
+            await fetch(
+                `${CUSTOMER_API_URL}/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
 
 
         if (!response.ok) {
 
-            throw new Error("Failed to delete customer");
+            throw new Error(
+                "Failed to delete customer"
+            );
 
         }
 
@@ -221,7 +517,11 @@ async function deleteCustomer(id) {
             await response.text();
 
 
-        alert(message);
+        showSuccess(
+            message ||
+            "Customer deleted successfully!"
+        );
+
 
         loadCustomers();
 
@@ -230,162 +530,156 @@ async function deleteCustomer(id) {
 
         console.error(error);
 
-        alert("Error deleting customer");
-
-    }
-
-}
-
-
-// ================================
-// Edit Customer
-// ================================
-
-async function editCustomer(id) {
-
-    const name =
-        prompt("Enter new customer name:");
-
-    const email =
-        prompt("Enter new customer email:");
-
-    const phone =
-        prompt("Enter new customer phone:");
-
-
-    if (!name || !email || !phone) {
-
-        return;
-
-    }
-
-
-    const customer = {
-
-        name: name,
-
-        email: email,
-
-        phone: phone
-
-    };
-
-
-    try {
-
-        const response =
-            await fetch(`${CUSTOMER_API_URL}/${id}`, {
-
-                method: "PUT",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
-                body: JSON.stringify(customer)
-
-            });
-
-
-        if (!response.ok) {
-
-            throw new Error("Failed to update customer");
-
-        }
-
-
-        alert("Customer updated successfully!");
-
-        loadCustomers();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Error updating customer");
-
-    }
-
-}
-
-
-// ================================
-// Add Order
-// ================================
-
-orderForm.addEventListener("submit", async function (event) {
-
-    event.preventDefault();
-
-
-    const order = {
-
-        customerId:
-            Number(document.getElementById("customerId").value),
-
-        product:
-            document.getElementById("product").value,
-
-        quantity:
-            Number(document.getElementById("quantity").value)
-
-    };
-
-
-    try {
-
-        const response =
-            await fetch(ORDER_API_URL, {
-
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
-                body: JSON.stringify(order)
-
-            });
-
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-            throw new Error(errorText);
-
-        }
-
-
-        alert("Order added successfully!");
-
-        orderForm.reset();
-
-        loadOrders();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Error adding order. Make sure the Customer ID exists."
+        showError(
+            "Unable to delete customer."
         );
 
     }
 
-});
+}
 
 
-// ================================
-// Load Orders
-// ================================
+// =================================
+// ORDER - ADD / UPDATE
+// =================================
+
+orderForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        const order = {
+
+            customerId:
+                Number(
+                    document.getElementById(
+                        "customerId"
+                    ).value
+                ),
+
+            product:
+                document.getElementById(
+                    "product"
+                ).value.trim(),
+
+            quantity:
+                Number(
+                    document.getElementById(
+                        "quantity"
+                    ).value
+                )
+
+        };
+
+
+        try {
+
+            let response;
+
+
+            if (editingOrderId !== null) {
+
+                response =
+                    await fetch(
+                        `${ORDER_API_URL}/${editingOrderId}`,
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(order)
+
+                        }
+                    );
+
+            } else {
+
+                response =
+                    await fetch(
+                        ORDER_API_URL,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(order)
+
+                        }
+                    );
+
+            }
+
+
+            if (!response.ok) {
+
+                if (
+                    response.status === 404
+                ) {
+
+                    throw new Error(
+                        "Customer ID does not exist."
+                    );
+
+                }
+
+
+                throw new Error(
+                    "Failed to save order"
+                );
+
+            }
+
+
+            if (editingOrderId !== null) {
+
+                showSuccess(
+                    "Order updated successfully!"
+                );
+
+            } else {
+
+                showSuccess(
+                    "Order added successfully!"
+                );
+
+            }
+
+
+            resetOrderForm();
+
+            loadOrders();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                error.message ||
+                "Unable to save order."
+            );
+
+        }
+
+    }
+);
+
+
+// =================================
+// ORDER - LOAD
+// =================================
 
 loadOrdersBtn.addEventListener(
     "click",
@@ -403,7 +697,9 @@ async function loadOrders() {
 
         if (!response.ok) {
 
-            throw new Error("Failed to load orders");
+            throw new Error(
+                "Failed to load orders"
+            );
 
         }
 
@@ -412,10 +708,46 @@ async function loadOrders() {
             await response.json();
 
 
+        const customerResponse =
+            await fetch(
+                CUSTOMER_API_URL
+            );
+
+
+        if (!customerResponse.ok) {
+
+            throw new Error(
+                "Failed to load customers"
+            );
+
+        }
+
+
+        const customers =
+            await customerResponse.json();
+
+
+        const customerMap = {};
+
+
+        customers.forEach(function (customer) {
+
+            customerMap[customer.id] =
+                customer.name;
+
+        });
+
+
         orderTableBody.innerHTML = "";
 
 
         orders.forEach(function (order) {
+
+            const customerName =
+                customerMap[
+                    order.customerId
+                ] || "Unknown";
+
 
             const row =
                 document.createElement("tr");
@@ -426,6 +758,8 @@ async function loadOrders() {
                 <td>${order.id}</td>
 
                 <td>${order.customerId}</td>
+
+                <td>${customerName}</td>
 
                 <td>${order.product}</td>
 
@@ -440,7 +774,6 @@ async function loadOrders() {
                         Edit
 
                     </button>
-
 
                     <button
                         class="delete-btn"
@@ -464,26 +797,146 @@ async function loadOrders() {
 
         console.error(error);
 
-        alert("Error loading orders");
+        showError(
+            "Unable to load orders."
+        );
 
     }
 
 }
 
 
-// ================================
-// Delete Order
-// ================================
+// =================================
+// ORDER - EDIT
+// =================================
+
+async function editOrder(id) {
+
+    try {
+
+        const response =
+            await fetch(
+                `${ORDER_API_URL}/${id}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load order"
+            );
+
+        }
+
+
+        const order =
+            await response.json();
+
+
+        document.getElementById(
+            "customerId"
+        ).value =
+            order.customerId;
+
+
+        document.getElementById(
+            "product"
+        ).value =
+            order.product;
+
+
+        document.getElementById(
+            "quantity"
+        ).value =
+            order.quantity;
+
+
+        editingOrderId = id;
+
+
+        orderSubmitBtn.textContent =
+            "Update Order";
+
+
+        cancelOrderBtn.style.display =
+            "inline-block";
+
+
+        orderForm.scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Unable to load order details."
+        );
+
+    }
+
+}
+
+
+// =================================
+// ORDER - CANCEL
+// =================================
+
+cancelOrderBtn.addEventListener(
+    "click",
+    function () {
+
+        resetOrderForm();
+
+    }
+);
+
+
+function resetOrderForm() {
+
+    editingOrderId = null;
+
+    orderForm.reset();
+
+    orderSubmitBtn.textContent =
+        "Add Order";
+
+    cancelOrderBtn.style.display =
+        "none";
+
+}
+
+
+// =================================
+// ORDER - DELETE
+// =================================
 
 async function deleteOrder(id) {
 
-    const confirmDelete =
-        confirm(
-            "Are you sure you want to delete this order?"
-        );
+    const result =
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "Delete Order?",
+
+            text:
+                "Are you sure you want to delete this order?",
+
+            showCancelButton: true,
+
+            confirmButtonText:
+                "Yes, Delete",
+
+            cancelButtonText:
+                "Cancel"
+
+        });
 
 
-    if (!confirmDelete) {
+    if (!result.isConfirmed) {
 
         return;
 
@@ -493,16 +946,19 @@ async function deleteOrder(id) {
     try {
 
         const response =
-            await fetch(`${ORDER_API_URL}/${id}`, {
-
-                method: "DELETE"
-
-            });
+            await fetch(
+                `${ORDER_API_URL}/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
 
 
         if (!response.ok) {
 
-            throw new Error("Failed to delete order");
+            throw new Error(
+                "Failed to delete order"
+            );
 
         }
 
@@ -511,7 +967,11 @@ async function deleteOrder(id) {
             await response.text();
 
 
-        alert(message);
+        showSuccess(
+            message ||
+            "Order deleted successfully!"
+        );
+
 
         loadOrders();
 
@@ -520,83 +980,8 @@ async function deleteOrder(id) {
 
         console.error(error);
 
-        alert("Error deleting order");
-
-    }
-
-}
-
-
-// ================================
-// Edit Order
-// ================================
-
-async function editOrder(id) {
-
-    const customerId =
-        prompt("Enter new Customer ID:");
-
-    const product =
-        prompt("Enter new product:");
-
-    const quantity =
-        prompt("Enter new quantity:");
-
-
-    if (!customerId || !product || !quantity) {
-
-        return;
-
-    }
-
-
-    const order = {
-
-        customerId: Number(customerId),
-
-        product: product,
-
-        quantity: Number(quantity)
-
-    };
-
-
-    try {
-
-        const response =
-            await fetch(`${ORDER_API_URL}/${id}`, {
-
-                method: "PUT",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
-                body: JSON.stringify(order)
-
-            });
-
-
-        if (!response.ok) {
-
-            throw new Error("Failed to update order");
-
-        }
-
-
-        alert("Order updated successfully!");
-
-        loadOrders();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Error updating order. Check the Customer ID."
+        showError(
+            "Unable to delete order."
         );
 
     }

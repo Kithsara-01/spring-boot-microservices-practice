@@ -12,152 +12,277 @@
 
 <body>
 
-    <div class="container">
+    <!-- ================================
+         NAVIGATION BAR
+    ================================= -->
 
-        <h1>Food Ordering System</h1>
+    <nav class="navbar">
 
-        <!-- Customer Management -->
+        <div class="nav-container">
 
-        <div class="form-section">
+            <div class="logo">
+                Food Ordering System
+            </div>
 
-            <h2>Customer Management</h2>
+            <div class="nav-links">
 
-            <h3>Add Customer</h3>
-
-            <form id="customerForm">
-
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Customer Name"
-                    required
-                >
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    required
-                >
-
-                <input
-                    type="text"
-                    id="phone"
-                    placeholder="Phone"
-                    required
-                >
-
-                <button type="submit">
-                    Add Customer
+                <button
+                    class="nav-btn active"
+                    id="customerNavBtn"
+                    onclick="showSection('customerSection')">
+                    Customer Service
                 </button>
 
-            </form>
-
-        </div>
-
-
-        <div class="customers-section">
-
-            <h2>Customers</h2>
-
-            <button id="loadCustomersBtn">
-                Load Customers
-            </button>
-
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Actions</th>
-                    </tr>
-
-                </thead>
-
-                <tbody id="customerTableBody">
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-        <!-- Order Management -->
-
-        <div class="form-section">
-
-            <h2>Order Management</h2>
-
-            <h3>Add Order</h3>
-
-            <form id="orderForm">
-
-                <input
-                    type="number"
-                    id="customerId"
-                    placeholder="Customer ID"
-                    required
-                >
-
-                <input
-                    type="text"
-                    id="product"
-                    placeholder="Product"
-                    required
-                >
-
-                <input
-                    type="number"
-                    id="quantity"
-                    placeholder="Quantity"
-                    min="1"
-                    required
-                >
-
-                <button type="submit">
-                    Add Order
+                <button
+                    class="nav-btn"
+                    id="orderNavBtn"
+                    onclick="showSection('orderSection')">
+                    Order Service
                 </button>
 
-            </form>
+            </div>
 
         </div>
 
+    </nav>
 
-        <div class="orders-section">
 
-            <h2>Orders</h2>
+    <!-- ================================
+         MAIN CONTENT
+    ================================= -->
 
-            <button id="loadOrdersBtn">
-                Load Orders
-            </button>
+    <main class="container">
 
-            <table>
+        <!-- =================================
+             CUSTOMER SERVICE
+        ================================== -->
 
-                <thead>
+        <section
+            id="customerSection"
+            class="service-section active-section">
 
-                    <tr>
-                        <th>ID</th>
-                        <th>Customer ID</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
-                    </tr>
+            <div class="section-header">
 
-                </thead>
+                <div>
+                    <h1>Customer Service</h1>
+                    <p>Manage customer accounts</p>
+                </div>
 
-                <tbody id="orderTableBody">
-                </tbody>
+                <span class="port-label">
+                    Port 8080
+                </span>
 
-            </table>
+            </div>
 
-        </div>
 
-    </div>
+            <!-- Customer Form -->
 
+            <div class="form-section">
+
+                <h2>Add / Update Customer</h2>
+
+                <form id="customerForm">
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Customer Name"
+                        required
+                    >
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Email"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="Phone"
+                        required
+                    >
+
+                    <button
+                        type="submit"
+                        id="customerSubmitBtn">
+                        Add Customer
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancelCustomerBtn"
+                        class="cancel-btn">
+                        Cancel
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- Customer Table -->
+
+            <div class="table-section">
+
+                <div class="table-header">
+
+                    <h2>Customers</h2>
+
+                    <button id="loadCustomersBtn">
+                        Load Customers
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="customerTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             ORDER SERVICE
+        ================================== -->
+
+        <section
+            id="orderSection"
+            class="service-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h1>Order Service</h1>
+                    <p>Manage food orders</p>
+                </div>
+
+                <span class="port-label">
+                    Port 8081
+                </span>
+
+            </div>
+
+
+            <!-- Order Form -->
+
+            <div class="form-section">
+
+                <h2>Add / Update Order</h2>
+
+                <form id="orderForm">
+
+                    <input
+                        type="number"
+                        id="customerId"
+                        placeholder="Customer ID"
+                        min="1"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="product"
+                        placeholder="Product"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        placeholder="Quantity"
+                        min="1"
+                        required
+                    >
+
+                    <button
+                        type="submit"
+                        id="orderSubmitBtn">
+                        Add Order
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancelOrderBtn"
+                        class="cancel-btn">
+                        Cancel
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- Order Table -->
+
+            <div class="table-section">
+
+                <div class="table-header">
+
+                    <h2>Orders</h2>
+
+                    <button id="loadOrdersBtn">
+                        Load Orders
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer ID</th>
+                                <th>Customer Name</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="orderTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- SweetAlert2 -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="script.js"></script>
 
