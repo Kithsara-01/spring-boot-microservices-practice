@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.order_service.model.Order;
 import com.example.order_service.service.OrderService;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class OrderController {
 
@@ -54,5 +56,4 @@ public class OrderController {
     public String getCustomerDetails(@PathVariable Long customerId) {
         return orderService.getCustomerDetails(customerId);
     }
-
 }
